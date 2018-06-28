@@ -119,20 +119,20 @@
                 id: LOCATION_ID,
                 iconPath: '/static/img/location.png',
                 position: {
-                  left: 20, // 单位px
-                  top: res.windowHeight - 150,
-                  width: 40, // 控件宽度/px
-                  height: 40,
+                  left: 12, // 单位px
+                  top: res.windowHeight - 110,
+                  width: 30, // 控件宽度/px
+                  height: 30,
                 },
                 clickable: true
               }, {
                 id: WALK_ID,
                 iconPath: '/static/img/walk.png',
                 position: {
-                  left: 20, // 单位px
-                  top: res.windowHeight - 200,
-                  width: 40, // 控件宽度/px
-                  height: 40,
+                  left: 12, // 单位px
+                  top: res.windowHeight - 150,
+                  width: 30, // 控件宽度/px
+                  height: 30,
                 },
                 clickable: true
               }
@@ -194,8 +194,8 @@
       .driver {
         position: absolute;
         top: 10px;
-        left: 50%;
-        transform: translateX(-50%);
+        left: 12px;
+        right: 12px;
         box-sizing: border-box;
         border: 1px solid @border-color-light;
         .card-shadow();
@@ -234,14 +234,14 @@
         }
       }
       .footer-bar {
-        padding: 0 14px;
+        padding: 0 12px;
         display: flex;
         align-items: center;
         position: absolute;
         bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        height: 42px;
+        left: 12px;
+        right: 12px;
+        height: 44px;
         box-shadow: 3px 5px 5px #e0e0e0;
         box-sizing: border-box;
         color: rgba(0, 0, 0, .7);
@@ -251,6 +251,7 @@
         .text {
           flex: 1 1 auto;
           display: inline-block;
+          text-align: center;
         }
         .footer-cancel, .footer-help {
           padding-right: 20px;
@@ -262,7 +263,7 @@
             top: 0;
             bottom: 0;
             height: 100%;
-            border-right: 1px solid @border-color-deep;
+            border-right: ~"1rpx" solid @border-color-deep;
           }
         }
       }

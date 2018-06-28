@@ -18,7 +18,7 @@
     </div>
     <div class="footer">
       <span class="need-help">需要帮助</span>
-      <span class="end-trip">结束行程</span>
+      <span class="end-trip" @click.stop="endTrip">结束行程</span>
     </div>
   </div>
 </template>
@@ -37,6 +37,18 @@
     methods: {
       chooseStar(num){
         this.stars = num
+      },
+      endTrip(){
+        wx.showLoading({
+          title: '提交中',
+          success: () => {
+            setTimeout(() => {
+              wx.redirectTo({
+                url: '/pages/index/main',
+              })
+            }, 800)
+          }
+        })
       }
     },
     computed: {
@@ -61,7 +73,7 @@
     padding: 0 12px;
     height: 100vh;
     overflow: hidden;
-    box-sizing: border-box;
+    box-sizing: content-box;
     .card {
       margin-top: 12px;
       .card-shadow();
@@ -109,16 +121,22 @@
     .footer {
       position: absolute;
       bottom: 20px;
-      left: 0;
-      right: 0;
+      left: 12px;
+      right: 12px;
       height: 44px;
+      box-sizing: border-box;
+      border: ~"1rpx" solid @border-color-light;
       .card-shadow(#e3e4e5);
       .need-help, .end-trip {
-        position: relative;
-        width: 50%;
         display: inline-block;
+        width: 50%;
+        height: 44px;
+        line-height: 44px;
+        text-align: center;
+        box-sizing: border-box;
       }
       .need-help {
+        border-right: ~"1rpx" solid @border-color-light;
       }
     }
   }

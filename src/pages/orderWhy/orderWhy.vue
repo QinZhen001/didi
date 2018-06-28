@@ -66,7 +66,7 @@
           icon: 'success',
           success: () => {
             wx.redirectTo({
-              url: "/pages/index/main"
+              url: "/pages/orderClose/main"
             })
           }
         })

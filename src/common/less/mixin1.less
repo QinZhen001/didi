@@ -24,12 +24,14 @@
   }
 }
 
+//文字不换行
 .no-wrap() {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
 }
 
+//倒三角
 .inverted-triangle(@color:#a4a4a4) {
   position: relative;
   &::after {
@@ -46,11 +48,12 @@
   }
 }
 
+//向右的箭头
 .right-arrow(@color:#ccc) {
   position: relative;
   &::after {
     position: absolute;
-    top: calc((100% - 6px) / 2);
+    top: calc((100% - 8px) / 2); //6 + 2 = 8    高度6 + 一个border-width 2
     right: 0;
     content: '';
     display: inline-block;
@@ -61,4 +64,9 @@
     border-style: solid;
     transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
   }
+}
+
+//卡片的阴影
+.card-shadow(@color:#e0e0e0) {
+  box-shadow: 3px 5px 10px @color;
 }

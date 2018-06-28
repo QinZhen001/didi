@@ -14,5 +14,9 @@ export const SET_END_POSITION = 'SET_END_POSITION'
 
 export const SET_CUR_CITY = 'SET_CUR_CITY'
 
+export const SET_DRIVER = 'SET_DRIVER'
+
+export const SET_COST = 'SET_COST'
+
 
 

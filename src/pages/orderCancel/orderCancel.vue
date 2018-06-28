@@ -31,15 +31,12 @@
                 url: "/pages/orderWhy/main",
               })
             } else if (res.cancel) {
-              wx.redirectTo({
-                url: "/pages/orderService/main"
-              })
+              wx.navigateBack()
             }
           }
         })
       },
-      noCancel(e){
-        console.log('noCancel')
+      noCancel(){
         wx.navigateBack()
       }
     }

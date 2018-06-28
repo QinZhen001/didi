@@ -15,34 +15,7 @@
          show-location>
 
       <cover-view class="driver" v-if="driver.name">
-        <cover-view class="driver-header">
-          <cover-view class="driver-img">
-            <cover-image class="img" src="/static/img/driver.png"/>
-          </cover-view>
-
-          <cover-view class="driver-detailed">
-            <cover-view class="detailed-header">
-              <cover-view class="detailed-name">{{driver.name}}</cover-view>
-              <cover-image class="detailed-star" src="/static/img/star.png"></cover-image>
-              <cover-view class="detailed-order">{{driver.stars}}</cover-view>
-            </cover-view>
-
-            <cover-view class="detailed-car-number">{{driver.Cartnumber}}</cover-view>
-
-            <cover-view class="detailed-car">{{driver.cart}}</cover-view>
-
-          </cover-view>
-
-
-          <cover-view class="driver-contact">
-            <cover-view class="img-mas">
-              <cover-image class="img" src="/static/img/msm.png"/>
-            </cover-view>
-            <cover-view class="img-phone">
-              <cover-image class="img" src="/static/img/phone.png"/>
-            </cover-view>
-          </cover-view>
-        </cover-view>
+        <driver-header :driver="driver"></driver-header>
         <cover-view class="driver-body">
           <cover-image class="img-looking" src="/static/img/looking.png"></cover-image>
           <cover-view class="text-looking">寻找拼友</cover-view>
@@ -54,7 +27,7 @@
 
       <cover-view class="footer-bar">
         <cover-view class="text footer-cancel" @click.stop="cancel">取消订单</cover-view>
-        <cover-view class="text footer-help" @click.stop="end">结束行程</cover-view>
+        <cover-view class="text footer-help" @click.stop="endTrip">结束行程</cover-view>
         <cover-view class="text footer-app">下载滴滴APP</cover-view>
       </cover-view>
     </map>
@@ -62,8 +35,9 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import DriverHeader from '../../components/driver-header.vue'
   import {request} from '../../api/request'
-  import {mapState} from 'vuex'
+  import {mapState, mapMutations} from 'vuex'
 
   const START_ID = 0,
     END_ID = 1,
@@ -87,9 +61,11 @@
       this.getInitControls()
     },
     onShow(){
-      this.requestDriver()
       this.mapCtx = wx.createMapContext("didiMap");
       this.mapCtx.moveToLocation();
+    },
+    mounted(){
+      this.requestDriver()
     },
     methods: {
       getInitData(){
@@ -171,8 +147,10 @@
           const res = await request('/comments')
           const drivers = res.data.drivers
           this.driver = drivers[Math.floor(Math.random() * drivers.length)];
+//          console.log('driver', this.driver)
           this.isShowLoading = false
-        }, 800)
+          this.saveDriver(this.driver)
+        }, 1800)
       },
       tapControl(e){
         this.mapCtx.moveToLocation();
@@ -182,23 +160,30 @@
           url: "/pages/orderCancel/main"
         })
       },
-      end(){
+      endTrip(){
         wx.redirectTo({
           url: "/pages/evaluation/main",
         })
-      }
+      },
+      ...mapMutations({
+        saveDriver: 'SET_DRIVER'
+      })
     },
     computed: {
       ...mapState([
         'startPosition',
         'endPosition'
       ])
+    },
+    components: {
+      DriverHeader
     }
   }
 </script>
 
 <style lang="less" scoped rel="stylesheet/less">
   @import '../../common/less/variable';
+  @import '../../common/less/mixin1';
 
   .order-service-page {
     width: 100%;
@@ -212,84 +197,10 @@
         left: 50%;
         transform: translateX(-50%);
         box-sizing: border-box;
-        border: 1px solid #f5f5f5;
-        box-shadow: 3px 5px 10px #e0e0e0;
+        border: 1px solid @border-color-light;
+        .card-shadow();
         background: #fff;
         z-index: 999;
-        .driver-header {
-          padding: 0 16px;
-          display: flex;
-          align-items: center;
-          width: 100%;
-          height: 95px;
-          border-bottom: 1px solid #f5f5f5;
-          box-sizing: border-box;
-          .driver-img {
-            flex: 0 0 auto;
-            .img {
-              width: 75px;
-              height: 75px;
-            }
-          }
-          .driver-detailed {
-            margin-left: 10px;
-            font-size: 0;
-            .detailed-header {
-              display: flex;
-              align-items: center;
-              height: 30px;
-              font-size: 0;
-              .detailed-name {
-                flex: 1 1 auto;
-                display: inline-block;
-                color: #333333;
-                font-size: 18px;
-              }
-              .detailed-star {
-                margin: -2px 4px 0;
-                flex: 0 0 17px;
-                vertical-align: middle;
-                display: inline-block;
-                width: 17px;
-                height: 17px;
-              }
-              .detailed-order {
-                flex: 1 1 auto;
-                display: inline-block;
-                font-size: 14px;
-                opacity: .6;
-              }
-            }
-            .detailed-car-number {
-              margin-top: 2px;
-              width: 80px;
-              height: 16px;
-              line-height: 16px;
-              font-size: 14px;
-              background-color: #eeeeee;
-              border: 1px solid #cccccc;
-              text-align: center;
-            }
-            .detailed-car {
-              margin-top: 6px;
-              height: 16px;
-              line-height: 16px;
-              font-size: 14px;
-              color: #666666;
-            }
-          }
-          .driver-contact {
-            flex: 1 1 auto;
-            .img-mas, .img-phone {
-              margin-left: 10px;
-              display: inline-block;
-              .img {
-                width: 35px;
-                height: 35px;
-              }
-            }
-          }
-        }
         .driver-body {
           text-align: center;
           height: 44px;

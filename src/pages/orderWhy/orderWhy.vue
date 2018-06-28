@@ -39,17 +39,14 @@
     },
     methods: {
       checkboxChange(e){
-//        console.log(e.mp.detail.value)
         const indexArr = e.mp.detail.value
         this.reasons = this.reasons.map(item => {
           if (indexArr.indexOf(String(item.value)) !== -1) {
-            console.log('item', item)
             return {...item, checked: true}
           } else {
             return {...item, checked: false}
           }
         })
-        console.log(this.reasons)
       },
       showMoreReasons(){
         wx.showLoading({
@@ -64,7 +61,15 @@
 
       },
       commit(){
-
+        wx.showToast({
+          title: '提交成功',
+          icon: 'success',
+          success: () => {
+            wx.redirectTo({
+              url: "/pages/index/main"
+            })
+          }
+        })
       }
     }
   }

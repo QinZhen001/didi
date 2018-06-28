@@ -24,6 +24,12 @@ const mutations = {
   },
   [types.SET_CUR_CITY](state, curCity){
     state.curCity = curCity
+  },
+  [types.SET_DRIVER](state, driver){
+    state.driver = driver
+  },
+  [types.SET_COST](state, cost){
+    state.cost = cost
   }
 }
 

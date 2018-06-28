@@ -64,3 +64,12 @@ export function reverseGeocoder(qqmapsdk, {latitude, longitude}) {
 }
 
 
+/**
+ * @param num 传入一个数
+ * @returns {boolean} 是小数返回true
+ */
+export function isDecimalNum(num) {
+  return String(num).indexOf('.') !== -1
+}
+
+

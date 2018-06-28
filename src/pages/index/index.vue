@@ -93,7 +93,7 @@
     </swiper>
     <div v-if="isShowCost" class="cost">
       <div class="cost-header">
-        <div class="header-item" v-for="item in costArr" :key="item.id">
+        <div class="header-item" v-for="item in chooseArr" :key="item.id">
           <img width="15" height="15" :src="item.url" alt="">
           <span>{{item.name}}</span>
         </div>
@@ -146,7 +146,7 @@
         navData: [],
         imgUrls: [],
         waitingTimes: [],
-        costArr: '',
+        chooseArr: [],
         car: '快车',
         carCostArr: carCostArr,
         curCostIndex: 0,
@@ -173,7 +173,7 @@
 //        console.log('res', res)
         this.imgUrls = res.data.imgUrls
         this.navData = res.data.navData
-        this.costArr = res.data.cost
+        this.chooseArr = res.data.cost
         //setTimeout延时 为了看到loading的效果
         setTimeout(() => {
           const arr = res.data.waitingTimes;
@@ -241,6 +241,7 @@
         this.curCostIndex = item.id
       },
       confirmCost(){
+        this.saveCost(this.carCostArr[this.curCostIndex].cost)
         wx.navigateTo({
           url: "/pages/wait/main",
           success: () => {
@@ -253,7 +254,8 @@
         saveStartPlace: 'SET_START_PLACE',
         saveFormattedStartPlace: 'SET_FORMATTED_START_PLACE',
         saveCurCity: 'SET_CUR_CITY',
-        saveStartPosition: 'SET_START_POSITION'
+        saveStartPosition: 'SET_START_POSITION',
+        saveCost: 'SET_COST'
       })
     },
     computed: {

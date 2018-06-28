@@ -20,7 +20,7 @@
     left: 0;
     right: 0;
     width: 100%;
-    border-bottom: 1px solid @color;
+    border-bottom: ~"1rpx" solid @color;
   }
 }
 
@@ -35,24 +35,24 @@
   &::after {
     content: "";
     position: absolute;
-    top: 20px;
+    top: 50%;
+    transform: translateY(-50%);
     right: 0;
     width: 0;
     height: 0;
-    border-left: 4px solid transparent;
-    border-right: 4px solid transparent;
-    border-top: 4px solid @color;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid @color;
   }
 }
 
 .right-arrow(@color:#ccc) {
   position: relative;
   &::after {
-    margin-top: -4px;
-    content: '';
     position: absolute;
-    top: 50%;
+    top: calc((100% - 6px) / 2);
     right: 0;
+    content: '';
     display: inline-block;
     height: 6px;
     width: 6px;

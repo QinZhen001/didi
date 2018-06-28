@@ -5,34 +5,66 @@
         <p class="text-why">你为什么取消?</p>
         <p class="text-header">请告知我们，我们可以改善</p>
       </div>
-      <div class="weui-cells weui-cells_after-title">
+      <div class="questionList weui-cells weui-cells_after-title">
         <checkbox-group @change="checkboxChange">
           <label class="weui-cell weui-check__label" v-for="item in reasons" :key="item.value">
-            <checkbox  value="item.value" checked="item.checked">
-            <span>
+            <checkbox class="weui-check" :value="item.value" :checked="item.checked"></checkbox>
+            <div class="text weui-cell__bd">
               {{item.name}}
-            </span>
-              <img src="/static/img/checked.png" alt="">
-            </checkbox>
+            </div>
+            <img v-if="item.checked" src="/static/img/checked.png" alt="">
+            <img v-if="!item.checked" src="/static/img/nochecked.png" alt="">
           </label>
         </checkbox-group>
+        <div class="weui-cell weui-cell_link"
+             v-if="isShowFrag"
+             @click.stop="showMoreReasons">
+          <div class="more-reasons">点击查看更多原因</div>
+        </div>
       </div>
     </div>
-
+    <button class="btn-commit" @click.stop="commit">提交</button>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-  import {reasons} from '../../common/constant/constant'
+  import {reasons, moreResons} from '../../common/constant/constant'
 
   export default{
     data(){
       return {
-        reasons: reasons
+        reasons: reasons,
+        isShowFrag: true
       }
     },
     methods: {
       checkboxChange(e){
+//        console.log(e.mp.detail.value)
+        const indexArr = e.mp.detail.value
+        this.reasons = this.reasons.map(item => {
+          if (indexArr.indexOf(String(item.value)) !== -1) {
+            console.log('item', item)
+            return {...item, checked: true}
+          } else {
+            return {...item, checked: false}
+          }
+        })
+        console.log(this.reasons)
+      },
+      showMoreReasons(){
+        wx.showLoading({
+          title: '加载中',
+          icon: 'loading',
+          duration: 500,
+          success: () => {
+            this.isShowFrag = false
+            this.reasons = this.reasons.concat(moreResons)
+          }
+        })
+
+      },
+      commit(){
+
       }
     }
   }
@@ -43,12 +75,9 @@
   @import '../../common/less/mixin1';
 
   .order-why-page {
-    padding: 0 10px;
-    height: 100vh;
-    overflow: hidden;
+    padding: 10px 16px 0;
     background-color: #f3f4f5;
     .card {
-      margin-top: 10px;
       background-color: #fff;
       .header {
         display: flex;
@@ -67,10 +96,31 @@
           font-size: 14px;
         }
       }
-      img {
-        width: 20px;
-        height: 20px;
+      .questionList {
+        .text {
+          .no-wrap();
+          color: #666666;
+          font-size: 14px;
+        }
+        img {
+          width: 20px;
+          height: 20px;
+        }
       }
+      .more-reasons {
+        margin: 0 auto;
+        height: 40px;
+        line-height: 40px;
+        padding-right: 12px;
+        .inverted-triangle(#adadad)
+      }
+    }
+    .btn-commit {
+      margin: 20px 0 20px;
+      width: 100%;
+      height: 50px;
+      background-color: #4a4c5b;
+      color: #fff;
     }
   }
 </style>

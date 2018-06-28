@@ -9,7 +9,7 @@
       <img src="/static/img/cancelCart.png" alt="">
     </div>
     <button class="btn btn-cancel" @click.stop="showCancelDialog">确定取消</button>
-    <button class="btn btn-no-cancel" @clcick.stop="noCancel">暂不取消</button>
+    <button class="btn btn-no-cancel" @click.stop="noCancel">暂不取消</button>
     <div class="footer">
       <img src="/static/img/rules.png" alt="">
       <span class="text-rule">取消规则</span>
@@ -28,7 +28,7 @@
           success: function (res) {
             if (res.confirm) {
               wx.redirectTo({
-                url: "/pages/order/main",
+                url: "/pages/orderWhy/main",
               })
             } else if (res.cancel) {
               wx.redirectTo({
@@ -38,10 +38,9 @@
           }
         })
       },
-      noCancel(){
-        wx.navigateBack({
-          url: "/pages/wait/main",
-        })
+      noCancel(e){
+        console.log('noCancel')
+        wx.navigateBack()
       }
     }
   }
@@ -49,9 +48,11 @@
 
 <style lang="less" scoped rel="stylesheet/less">
   .cancel-page {
-    padding: 30px 16px 0 16px;
+    padding: 0 16px;
     height: 100vh;
+    overflow: hidden;
     .header {
+      margin-top: 30px;
       text-align: center;
       .text-desc {
         color: #333333;

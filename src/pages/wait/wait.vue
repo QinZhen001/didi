@@ -89,8 +89,8 @@
         context.draw()
       },
       cancel(){
-        wx.redirectTo({
-          url: "/pages/cancel/main",
+        wx.navigateTo({
+          url: "/pages/orderCancel/main",
           success: () => {
             this.clearData()
           }

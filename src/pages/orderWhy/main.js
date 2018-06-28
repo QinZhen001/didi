@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import App from './cancel.vue'
+import App from './orderWhy.vue'
 // import store from '../../store/index'
 //
 // Vue.prototype.$store = store
@@ -10,6 +10,7 @@ app.$mount()
 
 export default {
   config: {
-    navigationBarTitleText: '取消行程',
+    navigationBarTitleText: '行程取消成功',
   }
 };
+

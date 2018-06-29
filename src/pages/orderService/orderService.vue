@@ -63,8 +63,6 @@
     onShow(){
       this.mapCtx = wx.createMapContext("didiMap");
       this.mapCtx.moveToLocation();
-    },
-    mounted(){
       this.requestDriver()
     },
     methods: {
@@ -188,6 +186,7 @@
   .order-service-page {
     width: 100%;
     height: 100vh;
+    box-sizing: border-box;
     .didiMap {
       width: 100%;
       height: 100%;
@@ -227,7 +226,7 @@
           height: 42px;
           line-height: 42px;
           font-size: 12px;
-          color: rgba(0, 0, 0, .5);
+          color: rgba(0, 0, 0, .6);
           text-align: center;
           box-sizing: border-box;
           border-top: 1px solid @border-color-light;
@@ -242,16 +241,17 @@
         left: 12px;
         right: 12px;
         height: 44px;
-        box-shadow: 3px 5px 5px #e0e0e0;
         box-sizing: border-box;
         color: rgba(0, 0, 0, .7);
         background: #fff;
+        .card-shadow(#e0e0e0);
         z-index: 999;
-        font-size: 18px;
+        font-size: 0;
         .text {
           flex: 1 1 auto;
           display: inline-block;
           text-align: center;
+          font-size: 18px;
         }
         .footer-cancel, .footer-help {
           padding-right: 20px;

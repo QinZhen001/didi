@@ -57,16 +57,18 @@
 </script>
 
 <style lang="less" scoped rel="stylesheet/less">
+  @import '../common/less/mixin1';
 
   .star {
     font-size: 0;
     .star-item {
+      margin-right: 10px;
       display: inline-block;
-      background-repeat: no-repeat;
       width: 22px;
       height: 22px;
-      margin-right: 10px;
+      background-repeat: no-repeat;
       background-size: 22px 22px;
+      .extend-click();
       &:last-child {
         margin-right: 0;
       }

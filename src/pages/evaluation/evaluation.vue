@@ -12,14 +12,16 @@
       <div class="card-footer">
         <p class="evaluation">匿名评价司机</p>
         <div class="star-wrapper">
-          <star :score="stars" @chooseStar="chooseStar"></star>
+          <star :score="stars"
+                @chooseStar="chooseStar">
+          </star>
         </div>
       </div>
     </div>
-    <div class="footer">
-      <span class="need-help">需要帮助</span>
-      <span class="end-trip" @click.stop="endTrip">结束行程</span>
-    </div>
+    <common-footer
+      @clickLeft="clickFooterLeft"
+      @clickRight="clickFooterRight">
+    </common-footer>
   </div>
 </template>
 
@@ -27,6 +29,7 @@
   import {mapState} from 'vuex'
   import DriverHeader from '../../components/driver-header.vue'
   import Star from '../../components/star.vue'
+  import CommonFooter from '../../components/common-footer.vue'
 
   export default{
     data(){
@@ -38,7 +41,7 @@
       chooseStar(num){
         this.stars = num
       },
-      endTrip(){
+      clickFooterRight(){
         wx.showLoading({
           title: '提交中',
           success: () => {
@@ -48,6 +51,13 @@
               })
             }, 800)
           }
+        })
+      },
+      clickFooterLeft(){
+        wx.showToast({
+          title: '尚未开发！',
+          icon: 'none',
+          duration: 2000
         })
       }
     },
@@ -59,7 +69,8 @@
     },
     components: {
       DriverHeader,
-      Star
+      Star,
+      CommonFooter
     }
   }
 </script>
@@ -70,14 +81,12 @@
 
   .evaluation-page {
     position: relative;
-    padding: 0 12px;
+    padding: 12px 12px 0;
     height: 100vh;
-    overflow: hidden;
-    box-sizing: content-box;
+    box-sizing: border-box;
     .card {
-      margin-top: 12px;
       .card-shadow();
-      border: 1px solid @border-color-light;
+      border: ~"1rpx" solid @border-color-light;
       .cost {
         border-bottom: ~"1rpx" solid @border-color-light;
         .cost-number {
@@ -113,30 +122,9 @@
           color: #666;
         }
         .star-wrapper {
-          margin: 12px 0;
+          margin: 10px 0;
           text-align: center;
         }
-      }
-    }
-    .footer {
-      position: absolute;
-      bottom: 20px;
-      left: 12px;
-      right: 12px;
-      height: 44px;
-      box-sizing: border-box;
-      border: ~"1rpx" solid @border-color-light;
-      .card-shadow(#e3e4e5);
-      .need-help, .end-trip {
-        display: inline-block;
-        width: 50%;
-        height: 44px;
-        line-height: 44px;
-        text-align: center;
-        box-sizing: border-box;
-      }
-      .need-help {
-        border-right: ~"1rpx" solid @border-color-light;
       }
     }
   }

@@ -45,11 +45,11 @@
 
 <style lang="less" scoped rel="stylesheet/less">
   .cancel-page {
-    padding: 0 16px;
+    padding: 30px 16px 0;
     height: 100vh;
+    box-sizing: border-box;
     overflow: hidden;
     .header {
-      margin-top: 30px;
       text-align: center;
       .text-desc {
         color: #333333;

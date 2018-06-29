@@ -80,8 +80,10 @@
   @import '../../common/less/mixin1';
 
   .order-why-page {
-    padding: 10px 16px 0;
-    background-color: #f3f4f5;
+    padding: 12px 12px 0;
+    height: 100vh;
+    box-sizing: border-box;
+    background-color: @page-bg-color;
     .card {
       background-color: #fff;
       .header {

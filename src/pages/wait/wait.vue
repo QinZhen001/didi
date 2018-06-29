@@ -18,14 +18,19 @@
         </div>
       </div>
     </div>
-    <div class="footer">
-      <span class="btn-cancel" @click.stop="cancel">取消订单</span>
-      <span class="btn-no-carpool" @click.stop="back">不拼车</span>
-    </div>
+    <CommonFooter
+      noShadow="true"
+      leftText="取消订单"
+      rightText="不拼车"
+      @clickLeft="cancel"
+      @clickRight="back"
+    >
+    </CommonFooter>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+  import CommonFooter from '../../components/common-footer.vue';
   import {mapState} from 'vuex'
   import {formatNumber} from '../../utils/index'
 
@@ -113,17 +118,22 @@
       ...mapState([
         'startFormattedPlace',
       ])
+    },
+    components: {
+      CommonFooter
     }
   }
 </script>
 
 <style lang="less" scoped rel="stylesheet/less">
   @import '../../common/less/mixin1';
+  @import '../../common/less/variable';
 
   .wait-page {
-    padding: 10px 16px 0 16px;
+    padding: 12px 12px 0;
     height: 100vh;
-    background-color: #f4f6f8;
+    background-color: @page-bg-color;
+    box-sizing: border-box;
     overflow: hidden;
     .header {
       display: flex;
@@ -192,27 +202,6 @@
             color: #fc9153;
           }
         }
-      }
-    }
-    .footer {
-      margin-top: 120px;
-      width: 100%;
-      height: 44px;
-      box-shadow: 1px 1px 3px #f5f6f7, 0 0 5px #e3e4e5;
-      background-color: #fff;
-      color: #666666;
-      text-align: center;
-      box-sizing: border-box;
-      border: 1px solid #eee;
-      .btn-cancel, .btn-no-carpool {
-        display: inline-block;
-        height: 44px;
-        line-height: 44px;
-        width: 50%;
-      }
-      .btn-cancel {
-        box-sizing: border-box;
-        border-right: 1px solid #eee;
       }
     }
   }

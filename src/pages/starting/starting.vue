@@ -20,7 +20,7 @@
          @end="end"
          show-location
     >
-      <cover-view class="adress">
+      <cover-view class="address">
         <cover-image class="img-address" src="/static/img/address.png">
         </cover-image>
         <cover-view class="address-desc">
@@ -38,13 +38,13 @@
   import SearchBar from '../../components/search-bar.vue'
   import {QQ_MAP_key} from '../../common/constant/constant'
   import QQMapWX from '../../common/lib/qqmap-wx-jssdk.js'
-  import {reverseGeocoder} from '../../utils/index'
+  import {reverseGeocoder, getRandomNum} from '../../utils/index'
   import {mapMutations, mapState} from 'vuex'
 
   const qqmapsdk = new QQMapWX({
     key: QQ_MAP_key
   });
-  const MARK_ID = 1, LOCATION_ID = 2;
+  const LOCATION_CONTROL_ID = 1, CENTER_MARK_ID = 2;
 
   export default{
     data(){
@@ -54,16 +54,18 @@
         scale: 16,
         markers: [],
         controls: [],
-        addresses: []
+        addresses: [],
+        minutes: getRandomNum(2, 15)
       }
     },
-    onLoad(){
+    created(){
+      //created方法获取经纬度 保证后面生命周期可以拿到经纬度
       this.initLocation()
-      this.initControls()
     },
     onReady(){
       this.mapCtx = wx.createMapContext("map-didi"); // 地图组件的id
       this.mapCtx.moveToLocation();
+      this.initData()
     },
     onUnload(){
       this.clearData()
@@ -78,30 +80,42 @@
           }
         })
       },
-      initControls(){
+      initData(){
         wx.getSystemInfo({
           success: (res) => {
             this.controls = [
               {
-                id: MARK_ID,
-                iconPath: '/static/img/marker2.png',
-                position: {
-                  left: res.windowWidth / 2 - 20,
-                  top: res.windowHeight / 2 - 46,
-                  width: 40,
-                  height: 46
-                },
-                clickable: true
-              }, {
-                id: LOCATION_ID,
+                id: LOCATION_CONTROL_ID,
                 iconPath: '/static/img/location.png',
                 position: {
-                  left: 20, // 单位px
-                  top: res.windowHeight - 150,
-                  width: 40, // 控件宽度/px
-                  height: 40,
+                  left: 12, // 单位px
+                  top: res.windowHeight - 120,
+                  width: 30, // 控件宽度/px
+                  height: 30,
                 },
                 clickable: true
+              }
+            ]
+            console.log(this.latitude, this.longitude)
+            this.markers = [
+              {
+                id: CENTER_MARK_ID,
+                latitude: this.latitude,
+                longitude: this.longitude,
+                iconPath: '/static/img/marker2.png',
+                width: 38,
+                height: 40,
+                callout: {
+                  content: `最快${this.minutes}分钟接驾`,
+                  color: '#f5f5f5',
+                  bgColor: '#616161',
+                  fontSize: 12,
+                  borderRadius: 12,
+                  padding: 5,
+                  textAlign: 'center',
+                  display: 'ALWAYS'
+                }
+
               }
             ]
           }
@@ -220,13 +234,13 @@
     .map-didi {
       width: 100%;
       height: 100%;
-      .adress {
+      .address {
         display: flex;
         align-items: center;
         position: absolute;
         bottom: 20px;
-        left: 10px;
-        right: 10px;
+        left: 12px;
+        right: 12px;
         height: 60px;
         box-sizing: border-box;
         overflow: hidden;
@@ -242,9 +256,9 @@
           flex: 1;
           height: 40px;
           .blur {
-            .no-wrap();
             font-size: 14px;
             color: #333333;
+            .no-wrap();
           }
           .detail {
             padding-top: 6px;

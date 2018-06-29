@@ -44,8 +44,18 @@ export function debounce(func, delay) {
  * @param max 最大值
  * @returns {string} 带一位小数的随机数
  */
-export function getRandomNum(min, max) {
+export function getRandomDecimal(min, max) {
   return (min + (max - min) * Math.random()).toFixed(1)
+}
+
+/**
+ *
+ * @param min 最小值
+ * @param max 最大值
+ * @returns {Number} 整数随机数
+ */
+export function getRandomNum(min, max) {
+  return parseInt(min + (max - min) * Math.random())
 }
 
 

@@ -8,14 +8,12 @@
         class="nav"
         scroll-x="true"
         scroll-with-animation="true"
-        :scroll-left="navScrollLeft"
-      >
+        :scroll-left="navScrollLeft">
         <div v-for="(item,index) in navData"
              :key="item.id"
              class="nav-item"
              :class="{active:index==curNavIndex}"
-             @click.stop="switchNav(item.id)"
-        >
+             @click.stop="switchNav(item.id)">
           {{item.name}}
         </div>
       </scroll-view>
@@ -23,7 +21,7 @@
         <img src="../../../static/img/nav-all.png" alt="">
       </div>
     </div>
-    <div class="card" v-if="!isShowCost">
+    <div class="card" :class="{'noWhite':isShowCost}">
       <div v-if="isLoading" class="loading-wrapper">
         <loading-sprinner></loading-sprinner>
       </div>
@@ -31,11 +29,11 @@
         {{waitingTimes}}
       </div>
       <div class="card-start">
-        <span class="circle circle-green"></span>
+        <span class="circle-green"></span>
         <span class="card-address" @click.stop="navigateToStarting">{{startFormattedPlace}}</span>
       </div>
       <div class="card-destination">
-        <span class="circle circle-orange"></span>
+        <span class="circle-orange"></span>
         <input type="text"
                class="card-input-destination"
                v-model="destination"
@@ -48,6 +46,31 @@
             class="btn-call-car">
       呼叫{{car}}
     </button>
+
+    <div v-if="isShowCost" class="cost">
+      <div class="cost-header">
+        <div class="header-item" v-for="item in chooseArr" :key="item.id">
+          <img width="15" height="15" :src="item.url" alt="">
+          <span>{{item.name}}</span>
+        </div>
+      </div>
+      <div class="cost-footer">
+        <div class="carpooling"
+             :class="{active:index==curCostIndex}"
+             v-for="(item,index) in carCostArr"
+             :key="item.id"
+             @click.stop="chooseCost(item)">
+          <span class="carpooling-name">{{item.name}}</span>
+          <img :src="item.imgUrl">
+          <span class="carpooling-cost">预计 {{item.cost}} 元</span>
+        </div>
+      </div>
+    </div>
+    <button v-if="isShowCost"
+            @click.stop="confirmCost"
+            class="btn-confirm">确认
+    </button>
+
     <swiper v-if="!isShowCost"
             class="swiper-tab"
             :current="curNavIndex"
@@ -91,29 +114,7 @@
         <img :src="item"/>
       </swiper-item>
     </swiper>
-    <div v-if="isShowCost" class="cost">
-      <div class="cost-header">
-        <div class="header-item" v-for="item in chooseArr" :key="item.id">
-          <img width="15" height="15" :src="item.url" alt="">
-          <span>{{item.name}}</span>
-        </div>
-      </div>
-      <div class="cost-footer">
-        <div class="carpooling"
-             :class="{active:index==curCostIndex}"
-             v-for="(item,index) in carCostArr"
-             :key="item.id"
-             @click.stop="chooseCost(item)">
-          <span class="carpooling-name">{{item.name}}</span>
-          <img :src="item.imgUrl">
-          <span class="carpooling-cost">预计 {{item.cost}} 元</span>
-        </div>
-      </div>
-    </div>
-    <button v-if="isShowCost"
-            @click.stop="confirmCost"
-            class="btn-confirm">确认
-    </button>
+
   </div>
 </template>
 
@@ -132,7 +133,7 @@
 
 
   //微信小程序无法进行Dom操作 所以无法动态拿到元素宽度
-  //这里模拟宽度 两个字宽度+2*margin 也就是 32+10*2 = 52
+  //这里进行模拟宽度 两个字宽度+2*margin 也就是 32+10*2 = 52
   const NAV_SMALL_WIDTH = 52;
   //这里模拟宽度 三个字宽度+2*margin 也就是 48+10*2 = 68
   const NAV_BIG_WIDTH = 68;
@@ -293,7 +294,7 @@
     height: 100vh;
     overflow: hidden;
     box-sizing: border-box;
-    background-color: #f4f6f8;
+    background-color: @page-bg-color;
     .nav-wrapper {
       display: flex;
       align-items: center;
@@ -314,16 +315,7 @@
         }
       }
       .nav-me {
-        position: relative;
-        &::after {
-          content: '';
-          position: absolute;
-          right: 0;
-          top: 0;
-          bottom: 0;
-          height: 100%;
-          border-right: 1px solid @border-color-light;
-        }
+        border-right: 1px solid @border-color-light;
       }
       .nav {
         flex: 1;
@@ -356,6 +348,9 @@
       box-shadow: 1px 1px 6px #f4f6f8;
       background-color: #fff;
       border-radius: 5px;
+      &.noWhite {
+        background-color: @page-bg-color;
+      }
       .loading-wrapper {
         position: absolute;
         top: 0;
@@ -375,18 +370,13 @@
         align-items: center;
         height: 60px;
         width: 100%;
-        .circle {
-          flex: 0 0 10px;
-          display: inline-block;
-          height: 10px;
-          width: 10px;
-          border-radius: 50%;
-        }
         .circle-green {
-          background: #3cbca3;
+          flex: 0 0 10px;
+          .circle(#3cbca3)
         }
         .circle-orange {
-          background: #fc9153;
+          flex: 0 0 10px;
+          .circle(#fc9153);
         }
         .card-address, .card-input-destination {
           padding-right: 8px;
@@ -450,10 +440,9 @@
       }
     }
     .cost {
-      margin-top: 74px;
       width: 100%;
-      border-radius: 5px;
       background: #fff;
+      border-radius: 5px;
       .cost-header, .cost-footer {
         display: flex;
         align-items: center;
@@ -486,9 +475,9 @@
       .cost-footer {
         height: 130px;
         .carpooling {
-          opacity: .5;
+          opacity: .6;
           transform: scale(.7);
-          flex: 0 0 auto;
+          font-size: 0;
           &.active {
             opacity: 1;
             transform: scale(1);
@@ -496,20 +485,19 @@
           .carpooling-name, .carpooling-cost {
             display: block;
             text-align: center;
-
           }
           .carpooling-name {
             font-size: 16px;
             margin-bottom: 6px;
           }
+          .carpooling-cost {
+            font-size: 14px;
+            margin-top: 6px;
+          }
           img {
             display: block;
             width: 75px;
             height: 35px;
-          }
-          .carpooling-cost {
-            font-size: 14px;
-            margin-top: 6px;
           }
         }
       }

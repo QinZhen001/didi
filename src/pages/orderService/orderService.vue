@@ -65,6 +65,9 @@
       this.mapCtx.moveToLocation();
       this.requestDriver()
     },
+//    onReady(){
+//     this.setMapView()   //缩放视野展示起点和终点经纬度
+//    },
     methods: {
       getInitData(){
         this.markers = [
@@ -135,9 +138,22 @@
                 clickable: true
               }
             ]
-
           }
         })
+      },
+      setMapView(){
+        if (this.startPosition.length && this.endPosition.length) {
+          console.log('includePoints')
+          this.mapCtx.includePoints({
+            points: [
+              {
+                latitude: this.startPosition[0], longitude: this.startPosition[1]
+              }, {
+                latitude: this.endPosition[0], longitude: this.endPosition[1]
+              }
+            ]
+          })
+        }
       },
       requestDriver(){
         //为了看到loading效果 设置延时
@@ -145,10 +161,9 @@
           const res = await request('/comments')
           const drivers = res.data.drivers
           this.driver = drivers[Math.floor(Math.random() * drivers.length)];
-//          console.log('driver', this.driver)
           this.isShowLoading = false
           this.saveDriver(this.driver)
-        }, 1800)
+        }, 800)
       },
       tapControl(e){
         this.mapCtx.moveToLocation();

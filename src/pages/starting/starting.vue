@@ -1,7 +1,11 @@
 <template>
   <div class="starting-page">
     <div class="search-bar-wrapper">
-      <search-bar ref="searchBar" :curCity="curCity" @search="search" @cancel="goBack"></search-bar>
+      <search-bar ref="searchBar"
+                  :curCity="curCity"
+                  @chooseCity="chooseCity"
+                  @search="search"
+                  @cancel="clearData"></search-bar>
     </div>
     <div class="address-list-wrapper" v-if="addresses.length">
       <address-list :data="addresses" @choose="chooseItem"></address-list>
@@ -58,13 +62,10 @@
         minutes: getRandomNum(2, 15)
       }
     },
-    created(){
+    onReady(){
       //created方法获取经纬度 保证后面生命周期可以拿到经纬度
       this.initLocation()
-    },
-    onReady(){
       this.mapCtx = wx.createMapContext("map-didi"); // 地图组件的id
-      this.mapCtx.moveToLocation();
       this.initData()
     },
     onUnload(){
@@ -72,13 +73,19 @@
     },
     methods: {
       initLocation(){
-        wx.getLocation({
-          type: "gcj02",
-          success: (res) => {
-            this.longitude = res.longitude
-            this.latitude = res.latitude
-          }
-        })
+        if (this.startPosition.length) {
+          this.latitude = this.startPosition[0]
+          this.longitude = this.startPosition[1]
+          console.log('this.startPosition', this.startPosition)
+        } else {
+          wx.getLocation({
+            type: "gcj02",
+            success: (res) => {
+              this.longitude = res.longitude
+              this.latitude = res.latitude
+            }
+          })
+        }
       },
       initData(){
         wx.getSystemInfo({
@@ -96,7 +103,6 @@
                 clickable: true
               }
             ]
-            console.log(this.latitude, this.longitude)
             this.markers = [
               {
                 id: CENTER_MARK_ID,
@@ -115,10 +121,15 @@
                   textAlign: 'center',
                   display: 'ALWAYS'
                 }
-
               }
             ]
+            this.updateCars()
           }
+        })
+      },
+      chooseCity(){
+        wx.navigateTo({
+          url: '/pages/cityChoose/main'
         })
       },
       search(value){
@@ -144,18 +155,12 @@
         this.goBack()
         this.$refs.searchBar.clear()
       },
-      goBack(){
-        wx.redirectTo({
-          url: '/pages/index/main'
-        })
-      },
       clearData(){
         this.addresses = []
         this.$refs.searchBar.clear()
       },
       tapControl(e){
-        console.log('tapControl', e.mp)
-        if (e.mp.controlId === LOCATION_ID) {
+        if (e.mp.controlId === LOCATION_CONTROL_ID) {
           this.mapCtx.moveToLocation()
         }
       },
@@ -168,14 +173,67 @@
       end(e){
         this.mapCtx.getCenterLocation({
           success: (res) => {
-            this.longitude = res.longitude
-            this.latitude = res.latitude
+
             reverseGeocoder(qqmapsdk, res).then(res => {
               this.saveStartPlace(res.result.address)
               this.saveFormattedStartPlace(res.result.formatted_addresses.recommend)
             })
+
+            const lon_distance = res.longitude - this.longitude
+            const lat_distance = res.latitude - this.latitude
+            // 更新当前位置坐标
+            this.longitude = res.longitude
+            this.latitude = res.latitude
+
+            //更新中心位置的marker
+            this.$set(this.markers, 0, {
+              ...this.markers[0],
+              latitude: this.latitude,
+              longitude: this.longitude,
+              callout: {
+                content: `最快${getRandomNum(2, 15)}分钟接驾`,
+                color: '#f5f5f5',
+                bgColor: '#616161',
+                fontSize: 12,
+                borderRadius: 12,
+                padding: 5,
+                textAlign: 'center',
+                display: 'ALWAYS'
+              }
+            })
+
+            //判断屏幕移动的距离，如果超过阀值，刷新附近的车
+            if (Math.abs(lon_distance) >= 0.0022 || Math.abs(lat_distance) >= 0.0022) {
+              this.updateCars()
+            }
           }
         })
+      },
+      updateCars(){
+        //删除第一个元素后面的所有元素
+        this.markers.splice(1, this.markers.length - 1)
+        const carNum = getRandomNum(3, 8)
+        for (let i = 1; i <= carNum; i++) {
+          // 定义一个车对象
+          let car = {
+            id: 0,
+            iconPath: "/static/img/car/cart1.png",
+            latitude: 0,
+            longitude: 0,
+            width: 35,
+            height: 15
+          }
+
+          //随机值
+          const lon_dis = (Math.ceil(Math.random() * 99)) * 0.00012;
+          const lat_dis = (Math.ceil(Math.random() * 99)) * 0.00012;
+
+          car.id = 2 + i
+          car.latitude = this.latitude + lat_dis
+          car.longitude = this.longitude + lon_dis
+          car.iconPath = `/static/img/car/cart${this.curNavIndex + 1}.png`
+          this.markers.push(car)
+        }
       },
       setStartPlace(){
         //这里只需要再保存位置就好了
@@ -196,6 +254,8 @@
         'curCity',
         'startPlace',
         'startFormattedPlace',
+        'startPosition',
+        'curNavIndex'
       ])
     },
     components: {
@@ -224,10 +284,10 @@
     .address-list-wrapper {
       position: fixed;
       top: 45px;
-      left: 16px;
-      right: 16px;
+      left: 0;
+      right: 0;
       height: 300px;
-      width: calc(100% - 32px);
+      width: 100%;
       z-index: 999;
       background-color: #fff;
     }

@@ -1,6 +1,6 @@
 <template>
   <div class="search-bar">
-    <div class="text-location">{{curCity}}</div>
+    <div class="text-location" @click.stop="chooseCity">{{curCity}}</div>
     <input type="text"
            v-model="search"
            class="input-location"
@@ -31,6 +31,9 @@
       },
       clear(){
         this.search = ''
+      },
+      chooseCity(){
+        this.$emit('chooseCity')
       }
     },
     watch: {

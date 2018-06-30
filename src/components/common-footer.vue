@@ -59,7 +59,7 @@
       box-sizing: border-box;
     }
     .need-help {
-      border-right: ~"1rpx" solid @border-color-light;
+      border-right: ~"1rpx" solid @border-color-deep;
     }
   }
 </style>

@@ -47,7 +47,6 @@
     onReady(){
       this.drawProgressBg();
       this.countInterval();
-//      this.drawProgress();
     },
     methods: {
       drawProgressBg(){

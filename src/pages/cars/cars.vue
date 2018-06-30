@@ -31,9 +31,7 @@
       chooseCar(item){
         this.setNavIndex(item.id)
         console.log(this.$store.state.curNavIndex)
-        wx.reLaunch({
-          url: "/pages/index/main"
-        })
+        wx.navigateBack()
       },
       ...mapMutations({
         setNavIndex: 'SET_CUR_NAV_INDEX'
@@ -43,6 +41,8 @@
 </script>
 
 <style lang="less" scoped rel="stylesheet/less">
+  @import '../../common/less/variable';
+
   .cars-page {
     display: flex;
     flex-wrap: wrap;
@@ -52,8 +52,8 @@
       flex: 0 1 auto;
       width: 33.33333333%;
       height: 105px;
-      border-right: 1px solid #d9d9d9;
-      border-bottom: 1px solid #d9d9d9;
+      border-right: 1px solid @border-color-deep;
+      border-bottom: 1px solid @border-color-deep;
       box-sizing: border-box;
       img {
         display: block;

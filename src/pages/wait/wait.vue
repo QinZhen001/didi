@@ -35,7 +35,7 @@
   import {formatNumber} from '../../utils/index'
 
   let countTimer;
-  const MAX_WAIT_TIME = 5 * 60
+  const MAX_WAIT_TIME = 300
 
   export default{
     data(){
@@ -44,9 +44,12 @@
         time: '00:00'
       }
     },
-    onReady(){
+    mounted(){
       this.drawProgressBg();
       this.countInterval();
+    },
+    onUnload(){
+      this.clearData()
     },
     methods: {
       drawProgressBg(){
@@ -95,17 +98,12 @@
       cancel(){
         wx.navigateTo({
           url: "/pages/orderCancel/main",
-          success: () => {
-            this.clearData()
-          }
         })
+        this.clearData(0)
       },
       back(){
         wx.redirectTo({
           url: "/pages/index/main",
-          success: () => {
-            this.clearData()
-          }
         })
       },
       clearData(){

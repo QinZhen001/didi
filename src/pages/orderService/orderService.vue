@@ -59,9 +59,9 @@
     onLoad(){
       this.getInitData()
       this.getInitControls()
+      this.mapCtx = wx.createMapContext("didiMap");
     },
     onShow(){
-      this.mapCtx = wx.createMapContext("didiMap");
       this.mapCtx.moveToLocation();
       this.requestDriver()
     },

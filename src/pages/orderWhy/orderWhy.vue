@@ -17,7 +17,7 @@
           </label>
         </checkbox-group>
         <div class="weui-cell weui-cell_link"
-             v-if="isShowFrag"
+             v-if="isShowMore"
              @click.stop="showMoreReasons">
           <div class="more-reasons">点击查看更多原因</div>
         </div>
@@ -34,7 +34,7 @@
     data(){
       return {
         reasons: reasons,
-        isShowFrag: true
+        isShowMore: true
       }
     },
     methods: {
@@ -54,8 +54,8 @@
           icon: 'loading',
           duration: 500,
           success: () => {
-            this.isShowFrag = false
             this.reasons = this.reasons.concat(moreResons)
+            this.isShowMore = false
           }
         })
 

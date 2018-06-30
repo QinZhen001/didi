@@ -5,6 +5,7 @@
         ref="searchBar"
         :curCity="curCity"
         @search="search"
+        @chooseCity="chooseCity"
         @cancel="goBack">
       </search-bar>
     </div>
@@ -32,22 +33,33 @@
         addresses: []
       }
     },
-    created(){
-      this.getInitData()
+    onShow(){
+      this.getSuggestion('a')
     },
     onUnload(){
       this.clearData()
     },
     methods: {
-      async getInitData(){
-        const res = await request('/comments')
-        this.addresses = res.data.entity
-      },
+//      async getInitData(){
+//        const res = await request('/comments')
+//        this.addresses = res.data.entity
+//      },
       search(value){
         if (value.length === 0) {
           this.addresses = []
           return
         }
+        this.getSuggestion(value)
+      },
+      chooseCity(){
+        wx.navigateTo({
+          url: '/pages/cityChoose/main',
+          success: () => {
+            this.clearData()
+          }
+        })
+      },
+      getSuggestion(value){
         qqmapsdk.getSuggestion({
           keyword: value,
           region: this.curCity,
@@ -57,9 +69,7 @@
         })
       },
       goBack(){
-        wx.redirectTo({
-          url: '/pages/index/main'
-        })
+        wx.navigateBack()
       },
       choosePlace(item){
         //item.address详细地址
@@ -79,6 +89,7 @@
       },
       clearData(){
         this.$refs.searchBar.clear()
+        this.addresses = []
       },
       ...mapMutations({
         saveDestination: 'SET_DESTINATION',
@@ -105,10 +116,19 @@
     width: 100%;
     height: 100vh;
     .search-bar-wrapper {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
       height: 44px;
       width: 100%;
+      z-index: 999;
     }
     .addressList-wrapper {
+      position: absolute;
+      top: 45px;
+      left: 0;
+      right: 0;
       width: 100%;
       overflow: hidden;
     }

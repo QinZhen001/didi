@@ -4,12 +4,11 @@
       <search-bar ref="searchBar"
                   :curCity="curCity"
                   @chooseCity="chooseCity"
-                  @search="search"
                   @cancel="clearData"></search-bar>
     </div>
-    <div class="address-list-wrapper" v-if="addresses.length">
-      <address-list :data="addresses" @choose="chooseItem"></address-list>
-    </div>
+    <!--<div class="address-list-wrapper" v-if="addresses.length">-->
+    <!--<address-list :data="addresses" @choose="chooseItem"></address-list>-->
+    <!--</div>-->
     <map class="map-didi"
          id="map-didi"
          :latitude="latitude"
@@ -62,9 +61,9 @@
         minutes: getRandomNum(2, 15)
       }
     },
-    onReady(){
-      //created方法获取经纬度 保证后面生命周期可以拿到经纬度
+    onShow(){
       this.initLocation()
+      //created方法获取经纬度 保证后面生命周期可以拿到经纬度
       this.mapCtx = wx.createMapContext("map-didi"); // 地图组件的id
       this.initData()
     },
@@ -273,27 +272,23 @@
     height: 100vh;
     overflow: hidden;
     .search-bar-wrapper {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
       width: 100%;
       height: 44px;
-      z-index: 999;
+      .card-shadow(#e0e0e0)
     }
-    .address-list-wrapper {
-      position: fixed;
-      top: 45px;
-      left: 0;
-      right: 0;
-      height: 300px;
-      width: 100%;
-      z-index: 999;
-      background-color: #fff;
-    }
+    /*.address-list-wrapper {*/
+    /*position: fixed;*/
+    /*top: 45px;*/
+    /*left: 0;*/
+    /*right: 0;*/
+    /*height: 300px;*/
+    /*width: 100%;*/
+    /*z-index: 999;*/
+    /*background-color: #fff;*/
+    /*}*/
     .map-didi {
       width: 100%;
-      height: 100%;
+      height: calc(100% - 44px);
       .address {
         display: flex;
         align-items: center;
@@ -332,7 +327,8 @@
           letter-spacing: 4px;
           flex: 0 0 40px;
           text-align: center;
-          color: #666666;
+          font-size: 18px;
+          color: #333;
         }
       }
     }

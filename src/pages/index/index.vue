@@ -34,11 +34,9 @@
       </div>
       <div class="card-destination">
         <span class="circle-orange"></span>
-        <input type="text"
-               class="card-input-destination"
-               v-model="destination"
-               @click.stop="navigateToDestination"
-               placeholder="你要去哪儿"/>
+        <span
+          class="card-input-destination"
+          @click.stop="navigateToDestination">{{destination}}</span>
       </div>
     </div>
     <button v-if="!isShowCost"

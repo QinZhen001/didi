@@ -85,9 +85,7 @@
             reverseGeocoder(qqmapsdk, {latitude: result.lat, longitude: result.lng}).then(res => {
               this.saveStartPlace(res.result.address)
               this.saveFormattedStartPlace(res.result.formatted_addresses.recommend)
-              wx.redirectTo({
-                url: '/pages/starting/main'
-              })
+              wx.navigateBack()
             })
           }
         })

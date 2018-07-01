@@ -5,7 +5,8 @@ export const swipers = ['会员', '套餐', '招募', '接机', '送机', '后�
 
 export const QQ_MAP_key = 'YJRBZ-LPWRX-AXN4O-7EFWE-LUHI6-PIFU4'
 
-
+//目的地
+export const INIT_DESTINATION = '你要去哪儿'
 
 
 export const carCostArr = [

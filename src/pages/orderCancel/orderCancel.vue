@@ -44,6 +44,8 @@
 </script>
 
 <style lang="less" scoped rel="stylesheet/less">
+  @import '../../common/less/mixin1';
+
   .cancel-page {
     padding: 30px 16px 0;
     height: 100vh;
@@ -67,15 +69,12 @@
     }
     .btn {
       margin-top: 10px;
-      height: 50px;
-      width: 100%;
       &.btn-cancel {
-        color: #000;
+        .long-btn(#000, #f5f5f5);
         border: 1px solid #4d4d4d;
       }
       &.btn-no-cancel {
-        color: #fff;
-        background-color: #4a4c5b;
+        .long-btn(#fff, #4a4c5b);
       }
     }
     .footer {

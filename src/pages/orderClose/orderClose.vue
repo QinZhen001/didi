@@ -40,8 +40,11 @@
   export default{
     data(){
       return {
-        time: formatTime(new Date())
+        time: ''
       }
+    },
+    mounted(){
+      this.time = formatTime(new Date())
     },
     methods: {
       clickFooterRight(){

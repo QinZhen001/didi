@@ -37,6 +37,9 @@
         isShowMore: true
       }
     },
+    onUnload(){
+      this.clearData()
+    },
     methods: {
       checkboxChange(e){
         const indexArr = e.mp.detail.value
@@ -52,13 +55,12 @@
         wx.showLoading({
           title: '加载中',
           icon: 'loading',
-          duration: 500,
+          duration: 800,
           success: () => {
             this.reasons = this.reasons.concat(moreResons)
             this.isShowMore = false
           }
         })
-
       },
       commit(){
         wx.showToast({
@@ -70,6 +72,10 @@
             })
           }
         })
+      },
+      clearData(){
+        this.reasons = reasons,
+          this.isShowMore = true
       }
     }
   }
@@ -90,7 +96,7 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
-        height: 72px;
+        height: 80px;
         box-sizing: border-box;
         .text-why {
           text-align: center;
@@ -123,11 +129,8 @@
       }
     }
     .btn-commit {
-      margin: 20px 0 20px;
-      width: 100%;
-      height: 50px;
-      background-color: #4a4c5b;
-      color: #fff;
+      margin: 20px 0;
+      .long-btn(#fff, #4a4c5b);
     }
   }
 </style>

@@ -121,7 +121,7 @@
   import {reverseGeocoder} from '../../utils/index'
   import LoadingSprinner from '../../components/loading-sprinner.vue'
   import {mapState, mapMutations} from 'vuex'
-  import {QQ_MAP_key} from '../../common/constant/constant'
+  import {QQ_MAP_key, INIT_DESTINATION} from '../../common/constant/constant'
   import QQMapWX from '../../common/lib/qqmap-wx-jssdk.js'
   import {carCostArr} from '../../common/constant/constant'
 
@@ -227,7 +227,7 @@
         })
       },
       showCost(){
-        if (!this.destination) {
+        if (this.destination == INIT_DESTINATION || this.destination == null) {
           wx.showToast({
             title: '请先选择目的地!',
             icon: 'none'
@@ -282,7 +282,7 @@
   @import "../../common/less/variable";
 
   .home-page {
-    padding: 0 16px;
+    padding: 0 12px;
     position: fixed;
     top: 0;
     left: 0;
@@ -342,8 +342,7 @@
     .card {
       position: relative;
       margin-top: 74px;
-      padding: 5px 20px 0 20px;
-      box-shadow: 1px 1px 6px #f4f6f8;
+      padding: 5px 16px 0 16px;
       background-color: #fff;
       border-radius: 5px;
       &.noWhite {
@@ -395,48 +394,7 @@
     }
     .btn-call-car, .btn-confirm {
       margin-top: 20px;
-      width: 340px;
-      height: 50px;
-      background-color: #4a4c5b;
-      color: #fff;
-    }
-    .swiper-tab {
-      margin-top: 24px;
-      width: 100%;
-      height: 100px;
-      .swiper-item {
-        display: flex;
-        align-items: center;
-        justify-content: space-around;
-        .item-content {
-          img {
-            height: 50px;
-            width: 50px;
-            border-radius: 50%;
-          }
-          .img-no-round {
-            height: 50px;
-            width: 74px;
-            border-radius: 50% 0 0 50%;
-          }
-          .item-text {
-            display: block;
-            font-size: 12px;
-            text-align: center;
-          }
-        }
-      }
-    }
-    .swiper-ad {
-      margin-top: 30px;
-      height: 72px;
-      width: 100%;
-      .swiper-item {
-        img {
-          width: 100%;
-          height: 100%;
-        }
-      }
+      .long-btn(#fff, #4a4c5b);
     }
     .cost {
       width: 100%;
@@ -501,9 +459,43 @@
         }
       }
     }
-    .btn-confirm {
+    .swiper-tab {
+      margin-top: 24px;
       width: 100%;
-      letter-spacing: 4px;
+      height: 100px;
+      .swiper-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        .item-content {
+          img {
+            height: 50px;
+            width: 50px;
+            border-radius: 50%;
+          }
+          .img-no-round {
+            height: 50px;
+            width: 74px;
+            border-radius: 50% 0 0 50%;
+          }
+          .item-text {
+            display: block;
+            font-size: 12px;
+            text-align: center;
+          }
+        }
+      }
+    }
+    .swiper-ad {
+      margin-top: 30px;
+      height: 72px;
+      width: 100%;
+      .swiper-item {
+        img {
+          width: 100%;
+          height: 100%;
+        }
+      }
     }
   }
 

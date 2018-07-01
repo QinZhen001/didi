@@ -13,8 +13,8 @@
         <canvas class="progress-bg" canvas-id="progressBg"></canvas>
         <canvas class="progress" canvas-id="progress"></canvas>
         <div class="progress-info">
-          <span class="text-info">{{progressTxt}}</span>
-          <span class="text-time">{{time}}</span>
+          <div class="text-info">{{progressTxt}}</div>
+          <div class="text-time">{{time}}</div>
         </div>
       </div>
     </div>
@@ -44,7 +44,7 @@
         time: '00:00'
       }
     },
-    mounted(){
+    onShow(){
       this.drawProgressBg();
       this.countInterval();
     },
@@ -99,7 +99,7 @@
         wx.navigateTo({
           url: "/pages/orderCancel/main",
         })
-        this.clearData(0)
+        this.clearData()
       },
       back(){
         wx.redirectTo({
@@ -155,23 +155,25 @@
       }
     }
     .container {
+      position: relative;
+      .text-desc-up, .text-desc-down {
+        text-align: center;
+        color: #666666;
+      }
       .text-desc-up {
         margin-top: 30px;
-        text-align: center;
         font-size: 20px;
-        color: #666666;
       }
       .text-desc-down {
         margin-top: 10px;
-        text-align: center;
         font-size: 16px;
-        color: #666666;
       }
       .circle-progress-wrapper {
         position: relative;
-        margin: 20px auto 0;
+        margin: 25px auto 0;
         width: 220px;
         height: 220px;
+        font-size: 0;
         .progress-bg, .progress {
           position: absolute;
           top: 0;
@@ -180,21 +182,17 @@
           height: 100%;
         }
         .progress-info {
-          text-align: center;
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          font-size: 0;
+          position: relative;
+          top: 75px;
           .text-info {
-            margin-bottom: 10px;
-            display: inline-block;
+            text-align: center;
             font-size: 14px;
             color: #666666;
             letter-spacing: 1px;
           }
           .text-time {
-            display: inline-block;
+            margin-top: 5px;
+            text-align: center;
             font-size: 28px;
             color: #fc9153;
           }

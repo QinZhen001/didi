@@ -97,9 +97,11 @@
         saveFormattedStartPlace: 'SET_FORMATTED_START_PLACE'
       })
     },
-    ...mapState([
-      'curCity'
-    ])
+    computed: {
+      ...mapState([
+        'curCity'
+      ])
+    }
   }
 </script>
 
@@ -139,6 +141,7 @@
         font-size: 14px;
         background: #f5f5f5;
         color: #9E9E9E;
+        border-bottom: ~"1rpx" solid @border-color-light;
       }
       .city-item {
         padding-left: 16px;

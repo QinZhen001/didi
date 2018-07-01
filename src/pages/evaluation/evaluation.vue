@@ -88,6 +88,7 @@
       .card-shadow();
       border: ~"1rpx" solid @border-color-light;
       .cost {
+        border-top: ~"1rpx" solid @border-color-light;
         border-bottom: ~"1rpx" solid @border-color-light;
         .cost-number {
           margin-top: 10px;

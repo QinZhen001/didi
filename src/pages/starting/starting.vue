@@ -4,7 +4,7 @@
       <search-bar ref="searchBar"
                   :curCity="curCity"
                   @chooseCity="chooseCity"
-                  @cancel="clearData"></search-bar>
+                  @cancel="cancel"></search-bar>
     </div>
     <!--<div class="address-list-wrapper" v-if="addresses.length">-->
     <!--<address-list :data="addresses" @choose="chooseItem"></address-list>-->
@@ -13,22 +13,32 @@
          id="map-didi"
          :latitude="latitude"
          :longitude="longitude"
-         :scale="scale"
          :polyline="polyline"
          :markers="markers"
-         :controls="controls"
-         @controltap="tapControl"
+         @controltap="onclickLocation"
          @regionchange="regionChange"
          @begin="begin"
          @end="end"
          show-location
     >
+
+      <cover-image class="location-marker"
+                   src="/static/img/location.png"
+                   @click.stop="onclickLocation">
+      </cover-image>
+
+      <cover-view class="center-marker">
+        <cover-view class="text-center">最快{{minutes}}分钟接驾</cover-view>
+        <cover-image class="inverted-triangle" src="/static/img/triangle-down.png"></cover-image>
+        <cover-image class="img-center" src="/static/img/marker2.png"></cover-image>
+      </cover-view>
+
       <cover-view class="address">
         <cover-image class="img-address" src="/static/img/address.png">
         </cover-image>
         <cover-view class="address-desc">
           <cover-view class="blur">{{startPlace}}</cover-view>
-          <cover-view class="detail"> {{startFormattedPlace}}</cover-view>
+          <cover-view class="detail">{{startFormattedPlace}}</cover-view>
         </cover-view>
         <cover-view class="btn-address" @click.stop="setStartPlace">确定</cover-view>
       </cover-view>
@@ -47,7 +57,8 @@
   const qqmapsdk = new QQMapWX({
     key: QQ_MAP_key
   });
-  const LOCATION_CONTROL_ID = 1, CENTER_MARK_ID = 2;
+
+  let touchTimeStamp = 0
 
   export default{
     data(){
@@ -56,9 +67,8 @@
         longitude: 0,
         scale: 16,
         markers: [],
-        controls: [],
         addresses: [],
-        minutes: getRandomNum(2, 15)
+        minutes: getRandomNum(3, 12)
       }
     },
     onShow(){
@@ -87,44 +97,7 @@
         }
       },
       initData(){
-        wx.getSystemInfo({
-          success: (res) => {
-            this.controls = [
-              {
-                id: LOCATION_CONTROL_ID,
-                iconPath: '/static/img/location.png',
-                position: {
-                  left: 12, // 单位px
-                  top: res.windowHeight - 120,
-                  width: 30, // 控件宽度/px
-                  height: 30,
-                },
-                clickable: true
-              }
-            ]
-            this.markers = [
-              {
-                id: CENTER_MARK_ID,
-                latitude: this.latitude,
-                longitude: this.longitude,
-                iconPath: '/static/img/marker2.png',
-                width: 38,
-                height: 40,
-                callout: {
-                  content: `最快${this.minutes}分钟接驾`,
-                  color: '#f5f5f5',
-                  bgColor: '#616161',
-                  fontSize: 12,
-                  borderRadius: 12,
-                  padding: 5,
-                  textAlign: 'center',
-                  display: 'ALWAYS'
-                }
-              }
-            ]
-            this.updateCars()
-          }
-        })
+        this.updateCars()
       },
       chooseCity(){
         wx.navigateTo({
@@ -154,63 +127,53 @@
         this.goBack()
         this.$refs.searchBar.clear()
       },
+      cancel(){
+        wx.navigateBack()
+        this.clearData()
+      },
       clearData(){
         this.addresses = []
         this.$refs.searchBar.clear()
       },
-      tapControl(e){
-        if (e.mp.controlId === LOCATION_CONTROL_ID) {
-          this.mapCtx.moveToLocation()
+      onclickLocation(e){
+        this.mapCtx.moveToLocation()
+      },
+      regionChange(){
+        console.log('regionChange', e)
+
+      },
+      begin({timeStamp}){
+        touchTimeStamp = timeStamp
+      },
+      end({timeStamp}){
+        console.log('end')
+//       加入时间判断
+//       解决修改data内数据导致地图在拖动开始时闪回原位的bug
+        if (timeStamp - touchTimeStamp > 50) {
+          this.mapCtx.getCenterLocation({
+            success: (res) => {
+              reverseGeocoder(qqmapsdk, res).then(res => {
+                this.saveStartPlace(res.result.address)
+                this.saveFormattedStartPlace(res.result.formatted_addresses.recommend)
+              })
+              const lon_distance = res.longitude - this.longitude
+              const lat_distance = res.latitude - this.latitude
+              // 更新当前位置坐标
+              this.longitude = res.longitude
+              this.latitude = res.latitude
+              //判断屏幕移动的距离，如果超过阀值
+              if (Math.abs(lon_distance) >= 0.0022 || Math.abs(lat_distance) >= 0.0022) {
+                //刷新附近的车
+                this.updateCars()
+                //刷新等待时间
+                this.minutes = getRandomNum(3, 12)
+              }
+            }
+          })
         }
       },
-      regionChange(e){
-        console.log('regionChange', e)
-      },
-      begin(e){
-        console.log('begin', e)
-      },
-      end(e){
-        this.mapCtx.getCenterLocation({
-          success: (res) => {
-
-            reverseGeocoder(qqmapsdk, res).then(res => {
-              this.saveStartPlace(res.result.address)
-              this.saveFormattedStartPlace(res.result.formatted_addresses.recommend)
-            })
-
-            const lon_distance = res.longitude - this.longitude
-            const lat_distance = res.latitude - this.latitude
-            // 更新当前位置坐标
-            this.longitude = res.longitude
-            this.latitude = res.latitude
-
-            //更新中心位置的marker
-            this.$set(this.markers, 0, {
-              ...this.markers[0],
-              latitude: this.latitude,
-              longitude: this.longitude,
-              callout: {
-                content: `最快${getRandomNum(2, 15)}分钟接驾`,
-                color: '#f5f5f5',
-                bgColor: '#616161',
-                fontSize: 12,
-                borderRadius: 12,
-                padding: 5,
-                textAlign: 'center',
-                display: 'ALWAYS'
-              }
-            })
-
-            //判断屏幕移动的距离，如果超过阀值，刷新附近的车
-            if (Math.abs(lon_distance) >= 0.0022 || Math.abs(lat_distance) >= 0.0022) {
-              this.updateCars()
-            }
-          }
-        })
-      },
       updateCars(){
-        //删除第一个元素后面的所有元素
-        this.markers.splice(1, this.markers.length - 1)
+        this.markers = []
         const carNum = getRandomNum(3, 8)
         for (let i = 1; i <= carNum; i++) {
           // 定义一个车对象
@@ -289,6 +252,46 @@
     .map-didi {
       width: 100%;
       height: calc(100% - 44px);
+      .location-marker {
+        position: fixed;
+        left: 12px;
+        bottom: 95px;
+        width: 32px;
+        height: 32px;
+      }
+      .center-marker {
+        position: fixed;
+        left: 50%;
+        top: calc(50% - 47px);
+        transform: translateX(-50%);
+        width: 110px;
+        height: 70px;
+        text-align: center;
+        .text-center {
+          padding: 0 4px;
+          position: relative;
+          height: 25px;
+          line-height: 25px;
+          color: #f5f5f5;
+          background-color: #616161;
+          font-size: 12px;
+          border-radius: 12px;
+          box-sizing: border-box;
+        }
+        .inverted-triangle {
+          position: absolute;
+          left: 45px;
+          top: 16px;
+          width: 20px;
+          height: 20px;
+        }
+        .img-center {
+          display: inline-block;
+          margin-top: 8px;
+          width: 38px;
+          height: 40px;
+        }
+      }
       .address {
         display: flex;
         align-items: center;

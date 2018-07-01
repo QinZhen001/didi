@@ -17,7 +17,6 @@
 
     </cover-view>
 
-
     <cover-view class="driver-contact">
       <cover-view class="img-mas">
         <cover-image class="img" src="/static/img/msm.png"/>
@@ -41,14 +40,13 @@
 </script>
 
 <style lang="less" scoped rel="stylesheet/less">
+
   .driver-header {
     padding: 0 12px;
     display: flex;
     align-items: center;
     width: 100%;
     height: 95px;
-    border-bottom: 1px solid #f5f5f5;
-    box-sizing: border-box;
     .driver-img {
       flex: 0 0 auto;
       .img {

@@ -40,10 +40,6 @@
       this.clearData()
     },
     methods: {
-//      async getInitData(){
-//        const res = await request('/comments')
-//        this.addresses = res.data.entity
-//      },
       search(value){
         if (value.length === 0) {
           this.addresses = []

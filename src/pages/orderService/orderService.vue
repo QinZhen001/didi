@@ -31,11 +31,13 @@
       <cover-image class="car-marker" src="/static/img/mapCart.png"></cover-image>
 
       <cover-view class="footer-bar">
-        <cover-view class="text footer-cancel" @click.stop="cancel">取消订单</cover-view>
+        <cover-view class="text" @click.stop="cancel">取消订单
+        </cover-view>
         <cover-view class="right-border"></cover-view>
-        <cover-view class="text footer-help" @click.stop="endTrip">结束行程</cover-view>
+        <cover-view class="text" @click.stop="endTrip">结束行程
+        </cover-view>
         <cover-view class="right-border"></cover-view>
-        <cover-view class="text footer-app">下载滴滴APP</cover-view>
+        <cover-view class="text">下载滴滴APP</cover-view>
       </cover-view>
     </map>
   </div>

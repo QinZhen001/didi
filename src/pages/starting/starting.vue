@@ -72,10 +72,11 @@
       }
     },
     onShow(){
+//     保证后面可以拿到经纬度
       this.initLocation()
-      //created方法获取经纬度 保证后面生命周期可以拿到经纬度
       this.mapCtx = wx.createMapContext("map-didi"); // 地图组件的id
-      this.initData()
+      console.log('this.curNavIndex', this.curNavIndex)
+      this.updateCars()
     },
     onUnload(){
       this.clearData()
@@ -85,7 +86,6 @@
         if (this.startPosition.length) {
           this.latitude = this.startPosition[0]
           this.longitude = this.startPosition[1]
-          console.log('this.startPosition', this.startPosition)
         } else {
           wx.getLocation({
             type: "gcj02",
@@ -95,9 +95,6 @@
             }
           })
         }
-      },
-      initData(){
-        this.updateCars()
       },
       chooseCity(){
         wx.navigateTo({
@@ -213,11 +210,11 @@
     },
     computed: {
       ...mapState([
+        'curNavIndex',
         'curCity',
         'startPlace',
         'startFormattedPlace',
-        'startPosition',
-        'curNavIndex'
+        'startPosition'
       ])
     },
     components: {

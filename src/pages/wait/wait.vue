@@ -35,7 +35,7 @@
   import {formatNumber} from '../../utils/index'
 
   let countTimer;
-  const MAX_WAIT_TIME = 300
+  const MAX_WAIT_TIME = 180
 
   export default{
     data(){
@@ -83,15 +83,13 @@
         }, 1000)
       },
       drawProgress(step){
-//      step的取值是0-2 所以step = step*2
-        step = step * 2
         const context = wx.createCanvasContext('progress');
         context.setLineWidth(4);
         context.setStrokeStyle("#fbcb02");
         context.setLineCap('round')
         context.beginPath();
         // 参数step 为绘制的圆环周长，从0到2为一周 。 -Math.PI / 2 将起始角设在12点钟位置 ，结束角 通过改变 step 的值确定
-        context.arc(110, 110, 100, -Math.PI / 2, step * Math.PI - Math.PI / 2, false);
+        context.arc(110, 110, 100, -Math.PI / 2, step * 2 * Math.PI - Math.PI / 2, false);
         context.stroke();
         context.draw()
       },

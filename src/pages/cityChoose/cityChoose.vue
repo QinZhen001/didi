@@ -68,25 +68,26 @@
             temp_citys[key].push(result[i].fullname)
           }
           this.cityList = temp_citys
-//          console.log(this.cityList)
         }
       })
     },
     methods: {
       chooseCity(city){
         console.log(city)
+        this.saveCurCity(city)
         qqmapsdk.geocoder({
           address: city,
           success: (res) => {
             console.log(res)
-            const result = res.result.location
-            this.saveCurCity(city)
-            this.saveStartPosition([result.lat, result.lng])
-            reverseGeocoder(qqmapsdk, {latitude: result.lat, longitude: result.lng}).then(res => {
-              this.saveStartPlace(res.result.address)
-              this.saveFormattedStartPlace(res.result.formatted_addresses.recommend)
-              wx.navigateBack()
-            })
+            if (this.startFormattedPlace === '' || this.startFormattedPlace == null) {
+              const result = res.result.location
+              this.saveStartPosition([result.lat, result.lng])
+              reverseGeocoder(qqmapsdk, {latitude: result.lat, longitude: result.lng}).then(res => {
+                this.saveStartPlace(res.result.address)
+                this.saveFormattedStartPlace(res.result.formatted_addresses.recommend)
+              })
+            }
+            wx.navigateBack()
           }
         })
       },
@@ -99,7 +100,8 @@
     },
     computed: {
       ...mapState([
-        'curCity'
+        'curCity',
+        'startFormattedPlace'
       ])
     }
   }
